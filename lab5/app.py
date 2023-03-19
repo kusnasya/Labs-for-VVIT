@@ -46,6 +46,24 @@ def registration():
         name = request.form.get('name')
         login = request.form.get('login')
         password = request.form.get('password')
+        if name == "":
+            render_template('registration.html', error_msg='Enter name')
+            return render_template('registration.html', error_msg='Enter name')
+        if login == "":
+            render_template('registration.html', error_msg='Enter login')
+            return render_template('registration.html', error_msg='Enter login')
+        if password == "":
+            render_template('registration.html', error_msg='Enter password')
+            return render_template('registration.html', error_msg='Enter password')
+        true_password = list(password)
+        true_login = list(login)
+        if len(true_password) < 6:
+            render_template('registration.html', error_msg='Your password must be at least 6 characters long')
+            return render_template('registration.html', error_msg='Your password must be at least 6 characters long')
+        if len(true_login) < 6:
+            render_template('registration.html', error_msg='Your login must be at least 6 characters long')
+            return render_template('registration.html', error_msg='Your login must be at least 6 characters long')
+
 
         cursor.execute("INSERT INTO service.users (full_name, login, password) VALUES"
                        "(%s, %s, %s);",

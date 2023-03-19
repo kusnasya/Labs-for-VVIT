@@ -6,6 +6,14 @@
 </head>
 <body>
 <form action="" method="post">
+    {% if error_msg %}
+    <p>{{error_msg}} </p>
+    {% endif %}
+
+    </p>
+
+</form>
+<form action="" method="post">
     <p>
         <label for="name">Your name:</label>
         <input type="text" name="name">
