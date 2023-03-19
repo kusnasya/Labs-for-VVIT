@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect
 import psycopg2
 
 app = Flask(__name__)
-conn = psycopg2.connect(database="service_ddb",
+conn = psycopg2.connect(database="service_dddb",
                         user="postgres",
                         password="D8ck9A1s",
                         host="localhost",
@@ -59,16 +59,14 @@ def registration():
         true_login = list(login)
         if len(true_password) < 6:
             render_template('registration.html', error_msg='Your password must be at least 6 characters long')
-            return render_template('registration.html', error_msg='Your password must be at least 6 characters long')
+            return render_template('registration.html',
+                                   error_msg='Your password must be at least 6 characters long')
         if len(true_login) < 6:
             render_template('registration.html', error_msg='Your login must be at least 6 characters long')
             return render_template('registration.html', error_msg='Your login must be at least 6 characters long')
-
-
         cursor.execute("INSERT INTO service.users (full_name, login, password) VALUES"
-                       "(%s, %s, %s);",
-                       (str(name), str(login), str(password)))
+                        "(%s, %s, %s);",
+                        (str(name), str(login), str(password)))
         conn.commit()
         return redirect('/login/')
-
     return render_template('registration.html')
