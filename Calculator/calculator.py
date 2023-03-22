@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QHBoxLayout, \
     QVBoxLayout, QPushButton
 
+
 class Calculator(QWidget):
     def __init__(self):
         super(Calculator, self).__init__()
@@ -30,19 +31,22 @@ class Calculator(QWidget):
         self.b_2.clicked.connect(lambda: self._button("2"))
         self.b_3.clicked.connect(lambda: self._button("3"))
 
-def _button(self, param):
-    line = self.input.text()
-    self.input.setText(line + param)
+    def _button(self, param):
+        line = self.input.text()
+        self.input.setText(line + param)
 
-def _operation(self, op):
-    self.num_1 = int(self.input.text())
-    self.op = op
-    self.input.setText("")
+    def _operation(self, op):
+        self.num_1 = int(self.input.text())
+        self.op = op
+        self.input.setText("")
 
-def _result(self):
-    self.num_2 = int(self.input.text())
-    if self.op == "+":
-        self.input.setText(str(self.num_1 + self.num_2))
+    def _result(self):
+        self.num_2 = int(self.input.text())
+        if self.op == "+":
+            self.input.setText(str(self.num_1 + self.num_2))
+
+
+
 
 app = QApplication(sys.argv)
 win = Calculator()
