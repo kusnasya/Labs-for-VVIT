@@ -70,12 +70,7 @@ def registration():
                            (str(name), str(login), str(password)))
             conn.commit()
         except psycopg2.errors.UniqueViolation:
-            render_template('registration.html', error_msg='There is already such a user')
-            return render_template('registration.html', error_msg='There is already such a user')
-        else:
-            cursor.execute("INSERT INTO service.users (full_name, login, password) VALUES"
-                           "(%s, %s, %s);",
-                           (str(name), str(login), str(password)))
             conn.commit()
-            return redirect('/login/')
+            return render_template('registration.html', error_msg='There is already such a user')
+        return redirect('/login/')
     return render_template('registration.html')
