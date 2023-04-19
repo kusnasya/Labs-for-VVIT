@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QHBoxLayout, \
-    QVBoxLayout, QPushButton
+    QVBoxLayout, QPushButton, QMessageBox
 
 
 class Calculator(QWidget):
@@ -20,6 +20,7 @@ class Calculator(QWidget):
         self.vbox.addLayout(self.hbox_fourth)
         self.vbox.addLayout(self.hbox_result)
         self.input = QLineEdit(self)
+
         self.hbox_input.addWidget(self.input)
         self.b_1 = QPushButton("1", self)
         self.hbox_first.addWidget(self.b_1)
@@ -43,21 +44,26 @@ class Calculator(QWidget):
         self.hbox_fourth.addWidget(self.b_point)
         self.b_0 = QPushButton("0", self)
         self.hbox_fourth.addWidget(self.b_0)
+
         self.b_plus = QPushButton("+", self)
         self.hbox_first.addWidget(self.b_plus)
         self.b_minus = QPushButton("-", self)
         self.hbox_second.addWidget(self.b_minus)
         self.b_multi = QPushButton("*", self)
         self.hbox_third.addWidget(self.b_multi)
+        self.b_clear = QPushButton("C", self)
+        self.hbox_fourth.addWidget(self.b_clear)
         self.b_division = QPushButton("/", self)
         self.hbox_fourth.addWidget(self.b_division)
         self.b_result = QPushButton("=", self)
         self.hbox_result.addWidget(self.b_result)
+
         self.b_plus.clicked.connect(lambda: self._operation("+"))
         self.b_minus.clicked.connect(lambda: self._operation("-"))
         self.b_multi.clicked.connect(lambda: self._operation("*"))
         self.b_division.clicked.connect(lambda: self._operation("/"))
         self.b_point.clicked.connect(lambda: self._button("."))
+        self.b_clear.clicked.connect(self._clear)
         self.b_result.clicked.connect(self._result)
         self.b_1.clicked.connect(lambda: self._button("1"))
         self.b_2.clicked.connect(lambda: self._button("2"))
@@ -70,19 +76,34 @@ class Calculator(QWidget):
         self.b_9.clicked.connect(lambda: self._button("9"))
         self.b_0.clicked.connect(lambda: self._button("0"))
 
+    def warn_display(self, log):
+        err = QMessageBox()
+        if log == 1:
+            err.setText("Некорректный ввод")
+        elif log == 2:
+            err.setText("Ошибка деления на ноль")
+        err.setWindowTitle("Ошибка")
+        err.exec_()
+
     def _button(self, param):
         line = self.input.text()
-        if not (param == "." and line.count(".") > 0) :
+        if not (param == "." and line.count(".") > 0):
             self.input.setText(line + param)
 
 
     def _operation(self, op):
-        self.num_1 = int(self.input.text())
+        try:
+            self.num_1 = float(self.input.text())
+        except:
+            self.warn_display(1)
         self.op = op
         self.input.setText("")
 
     def _result(self):
-        self.num_2 = int(self.input.text())
+        try:
+            self.num_2 = float(self.input.text())
+        except:
+            self.warn_display(1)
         if self.op == "+":
             self.input.setText(str(self.num_1 + self.num_2))
         if self.op == "-":
@@ -90,13 +111,25 @@ class Calculator(QWidget):
         if self.op == "*":
             self.input.setText(str(self.num_1 * self.num_2))
         if self.op == "/":
-            self.input.setText(str(self.num_1 / self.num_2))
+            if self.num_2 != 0.0:
+                self.input.setText(str(self.num_1 / self.num_2))
+            else:
+                self.warn_display(2)
+
+    def _clear(self):
+        self.input.clear()
 
 
 
-
+def my_exception_hook(exctype, value, traceback):
+    print(exctype, value, traceback)
+    sys._excepthook(exctype, value, traceback)
+    sys.exit(1)
+sys._excepthook = sys.excepthook
+sys.excepthook = my_exception_hook
 
 app = QApplication(sys.argv)
+
 win = Calculator()
 win.show()
 sys.exit(app.exec_())
