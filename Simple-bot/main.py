@@ -93,5 +93,7 @@ def answer(message):
         bot.send_message(message.chat.id, get_week(week, 0))
     elif message.text.lower() == 'на следующую неделю':
         bot.send_message(message.chat.id, get_week(next_week, 7))
+    else:
+        bot.send_message(message.chat.id,'Извините, я Вас не понял')
 
 bot.polling()
